@@ -1,0 +1,11 @@
+.cache/
+build/
+sample_repo.egg-info/
+result_images/
+
+*.pyc
+*.swp
+*.egg
+
+__pycache__
+dist
