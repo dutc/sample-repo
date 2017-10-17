@@ -1,220 +1,290 @@
 Script
 ------
 
-1. Sign-up for Github
+## 1. Sign-up for Github
 
-    Go to mail.com
-    E-mail:   johnsmithpse@mail.com
-    Password: TIP1234pse
-    Security Question: What city were you born in? Tel Aviv
+http://mail.com/
+- E-mail:   johnsmithpse@mail.com
+- Password: TIP1234pse
+- Security Question: What city were you born in? Tel Aviv
 
-    Go to github.com
-    Sign-Up
-    Username:  johnsmithpse
-    E-mail:    johnsmithpse@gmail.com
-    Password:  TIP1234pse
+Go to github.com
+- Username:  johnsmithpse
+- E-mail:    johnsmithpse@gmail.com
+- Password:  TIP1234pse
 
-    https://github.com/settings/keys
+https://github.com/settings/keys
 
-    ssh-add -K ~/id_rsa
+```sh
+$ ssh-add -K ~/id_rsa
+```
 
-2. Fork repo
+## 2. Fork repo
 
-    https://github.com/telecominfraproject/sample-repo
+https://github.com/telecominfraproject/sample-repo
 
-3. Clone locally
+## 3. Clone locally
 
-    $ git clone ssh://git@github.com/johnsmithpse/sample-repo
+$ git clone ssh://git@github.com/johnsmithpse/sample-repo
 
-(4. Install Anaconda)
-    https://www.anaconda.com/download
+## (4. Install Anaconda)
+https://www.anaconda.com/download
 
-    Choose Python 3.6 version.
+Choose Python 3.6 version.
 
-    Direct links:
-    Linux: https://repo.continuum.io/archive/Anaconda3-5.0.0.1-Linux-x86_64.sh
-    macos: https://repo.continuum.io/archive/Anaconda3-5.0.0-MacOSX-x86_64.pkg
+Direct links:
+- Linux: https://repo.continuum.io/archive/Anaconda3-5.0.0.1-Linux-x86_64.sh
+- macos: https://repo.continuum.io/archive/Anaconda3-5.0.0-MacOSX-x86_64.pkg
 
+## 4a. Create virtual environment
 
-4a. Create virtual environment
+```sh
+$ python -m venv venv
+```
 
-    $ python -m venv venv
+## 4b. Activate virtual environment
 
-4b. Activate virtual environment
+```sh
+$ source venv/bin/activate
+$ which python
+```
 
-    $ source venv/bin/activate
-    $ which python
+## (4c. Deactivate virtual environment)
 
-(4c. Deactivate virtual environment)
+```sh
+$ which python
+$ deactivate
+$ which python
+```
 
-    $ which python
-    $ deactivate
-    $ which python
+## 5. Install dependencies
 
-5. Install dependencies
+```sh
+$ pip install -r requirements.txt
+```
 
-    $ pip install -r requirements.txt
+## 6. Install package
 
-6. Install package
+```sh
+$ python setup.py install
+```
 
-    $ python setup.py install
+## 7. Run tests, notice test failure
 
-7. Run tests, notice test failure
+```sh
+$ python setup.py test
+```
 
-    $ python setup.py test
+```sh
+$ open result_images/test_statistics/average-*.png
+```
 
-    $ open result_images/test_statistics/average-*.png
+## 8. Submit issues, discussing test failure
 
-8. Submit issues, discussing test failure
+### (i)
 
-    (i)
+```
+test_statistics.py:test_plot_average test failure
 
-    test_statistics.py:test_plot_average test failure
+The test was updated but the new expected output was not updated.
 
-    The test was updated but the new expected output was not updated.
+FIX: Update test image
+```
 
-    FIX: Update test image
+### (ii)
 
-    (ii)
+```
+test_statistics.py:test_average test failure
 
-    test_statistics.py:test_average test failure
+Comparison of floating-point numbers in test fails.
 
-    Comparison of floating-point numbers in test fails.
+FIX: Use math.isclose
+```
 
-    FIX: Use math.isclose
+## 9. Make code change fixing bug
 
-9. Make code change fixing bug
+```sh
+$ git checkout -b fix-tests
+```
 
-    $ git checkout -b fix-tests
+### (i)
 
-    (i)
+```sh
+$ mv result_images/test_statistics/average.png tests/baseline_images/test_statistics/average.png
+```
 
-    $ mv result_images/test_statistics/average.png tests/baseline_images/test_statistics/average.png
+### (ii)
 
-    (ii)
+```python
+from math import isclose
+assert isclose(average(f, 15.777, rel_tol=1e-3))
+```
 
-    from math import isclose
-    assert isclose(average(f, 15.777, rel_tol=1e-3))
+## 10. Commit change(s)
 
-10. Commit change(s)
+### (i)
 
-    (i)
+```sh
+$ git commit tests/baseline_images/test_statistics/average.png
+```
 
-    $ git commit tests/baseline_images/test_statistics/average.png
+```
+Updated expected test image for test_statistics (#....)
+```
 
-    Updated expected test image for test_statistics (#....)
+```sh
+$ git push origin fix-tests
+```
 
-    $ git push origin fix-tests
+### (ii)
 
-    (ii)
+```sh
+$ git commit tests/test_statistics.py
+```
 
-    $ git commit tests/test_statistics.py
+```
+Fixed incorrect floating-point comparison in test_statistics (#....)
+```
 
-    Fixed incorrect floating-point comparison in test_statistics (#....)
+```sh
+$ git push origin fix-tests
+```
 
-    $ git push origin fix-tests
+## 11. Rebase into logical commit
 
-11. Rebase into logical commit
+```sh
+$ git rebase -i fix-tests~2
+```
 
-    $ git rebase -i fix-tests~2
+```
+Fix test_statistics (#...., #....)
 
-    Fix test_statistics (#...., #....)
+Updated expected test image for test_statistics (#....)
+Fixed incorrect floating-point comparison in test_statistics (#....)
+```
 
-    Updated expected test image for test_statistics (#....)
-    Fixed incorrect floating-point comparison in test_statistics (#....)
+## 12. Push to Github
 
-12. Push to Github
+```sh
+$ git push origin fix-tests
+```
 
-    $ git push origin fix-tests
+## 13. Submit pull request
+## 14. Code review process
+## 15. Code accepted, close issue, pull updated code
 
-13. Submit pull request
-14. Code review process
-15. Code accepted, close issue, pull updated code
+```sh
+$ git remote add upstream https://github.com/Telecominfraproject/sample-repo
+$ git fetch upstream master
+$ git reset --hard upstream/master
+```
 
-    $ git remote add upstream https://github.com/Telecominfraproject/sample-repo
-    $ git fetch upstream master
-    $ git reset --hard upstream/master
+## 16. Make code change adding new feature
 
-16. Make code change adding new feature
+```sh
+$ git checkout -b variance
+```
 
-    $ git checkout -b variance
+### edit sample/statistics.py
 
-    # edit sample/statistics.py
-    def variance(xs):
-        sq_total, total, count = scan(add, ((x**2, x, 1) for x in xs))
-        return sq_total/count - (total/count)**2
+```python
+def variance(xs):
+    sq_total, total, count = scan(add, ((x**2, x, 1) for x in xs))
+    return sq_total/count - (total/count)**2
+```
 
-    $ git commit sample/statistics.py
+```
+$ git commit sample/statistics.py
+```
 
-    add variance function
+```
+add variance function
 
-    Computes variance of a sequence.
+Computes variance of a sequence.
+```
 
-17. Push to Github, submit pull request
+## 17. Push to Github, submit pull request
 
-    $ git push origin variance
+```
+$ git push origin variance
+```
 
-18. Code review indicates inadequate documentation
-19. Add proper documentation
+## 18. Code review indicates inadequate documentation
+## 19. Add proper documentation
 
-    # edit sample/statistics.py
-    def variance(xs):
-        '''
-        population variance of a sequence
+### edit sample/statistics.py
+```python
+def variance(xs):
+    '''
+    population variance of a sequence
 
-        :param xs: the sequence
-        '''
-        sq_total, total, count = scan(add, ((x**2, x, 1) for x in xs))
-        return sq_total/count - (total/count)**2
+    :param xs: the sequence
+    '''
+    sq_total, total, count = scan(add, ((x**2, x, 1) for x in xs))
+    return sq_total/count - (total/count)**2
+```
 
-    $ git commit sample/statistics.py
+```sh
+$ git commit sample/statistics.py
+```
 
-20. Squash commits, push to Github, comment on pull request
+## 20. Squash commits, push to Github, comment on pull request
 
-    $ git rebase -i variance~2
+```sh
+$ git rebase -i variance~2
+```
 
-21. Code review indicates inadequate testing
-22. Add testing
+## 21. Code review indicates inadequate testing
+## 22. Add testing
 
-    # edit sample/statistics.py
-    def variance(xs):
-        '''
-        population variance of a sequence
+### edit sample/statistics.py
+```python
+def variance(xs):
+    '''
+    population variance of a sequence
 
-        :param xs: the sequence
+    :param xs: the sequence
 
-        >>> variance(range(10))
-        8.25
-        '''
-        sq_total, total, count = scan(add, ((x**2, x, 1) for x in xs))
-        return sq_total/count - (total/count)**2
+    >>> variance(range(10))
+    8.25
+    '''
+    sq_total, total, count = scan(add, ((x**2, x, 1) for x in xs))
+    return sq_total/count - (total/count)**2
+```
 
-    # edit tests/test_statistics.py
+### edit tests/test_statistics.py
+```python
+from sample import variance
 
-    from sample import variance
+def test_variance():
+    f = islice(fib(), 1 10)
+    assert isclose(variance(f), 294.839, rel_tol=1e-3)
+```
 
-    def test_variance():
-        f = islice(fib(), 1 10)
-        assert isclose(variance(f), 294.839, rel_tol=1e-3)
+### edit sample/statistics.py
+```python
+def variance(xs):
+    '''
+    population variance of a sequence
 
-    # edit sample/statistics.py
-    def variance(xs):
-        '''
-        population variance of a sequence
+    :param xs: the sequence
 
-        :param xs: the sequence
+    >>> variance(range(10))
+    8.25
+    '''
+    sq_total, total, count = tail(scan(add, ((x**2, x, 1) for x in xs)))[0]
+    return sq_total/count - (total/count)**2
+```
 
-        >>> variance(range(10))
-        8.25
-        '''
-        sq_total, total, count = tail(scan(add, ((x**2, x, 1) for x in xs)))[0]
-        return sq_total/count - (total/count)**2
+## 23. Squash commits push to Github, comment on pull request
 
-23. Squash commits push to Github, comment on pull request
+```sh
+$ git rebase -i variance~2
+```
 
-    $ git rebase -i variance~2
+## 24. Code accepted, pull updated code
 
-24. Code accepted, pull updated code
-
-    $ git fetch upstream master
-    $ git reset --hard upstream/master
+```sh
+$ git fetch upstream master
+$ git reset --hard upstream/master
+```
